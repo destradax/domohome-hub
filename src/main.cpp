@@ -1,18 +1,35 @@
 #include <Arduino.h>
+#include <ESP8266WiFi.h>
 
-// put function declarations here:
-int myFunction(int, int);
+#include "credentials.h"
+#include "wifi.h"
+
+bool connectedToWifi = false;
+bool printResult = true;
 
 void setup() {
-  // put your setup code here, to run once:
-  int result = myFunction(2, 3);
+  // initialize the serial port
+  Serial.begin(9600);
+  while (!Serial) {
+    ;
+  }
+
+  // initialize built-in led for blinking
+  pinMode(LED_BUILTIN, OUTPUT);
+
+  if (connectToWifi(ssid, passPhrase)) {
+    connectedToWifi = true;
+  }
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
-}
+  if (printResult) {
+    printResult = false;
 
-// put function definitions here:
-int myFunction(int x, int y) {
-  return x + y;
+    if (connectedToWifi) {
+      Serial.println("Hub connected to WiFi");
+    } else {
+      Serial.println("Hub did not connect to WiFi");
+    }
+  }
 }
