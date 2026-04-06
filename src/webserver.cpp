@@ -7,14 +7,6 @@
 
 ESP8266WebServer server(80);
 
-/// @brief Initializes the web server and registers routes
-void initWebServer() {
-  server.on("/", HTTP_GET, handleRoot);
-  server.on("/wifi/status", HTTP_GET, handleWifiStatus);
-  server.begin();
-  Serial.println("Web server started");
-}
-
 /// @brief sends the index.html file
 void handleRoot() { server.send(200, "text/html", index_html); }
 
@@ -27,4 +19,13 @@ void handleWifiStatus() {
   String json;
   serializeJson(doc, json);
   server.send(200, "application/json", json);
+}
+
+/// @brief Initializes the web server and registers routes
+void initWebServer() {
+  LittleFS.begin();
+  server.on("/", HTTP_GET, handleRoot);
+  server.on("/wifi/status", HTTP_GET, handleWifiStatus);
+  server.begin();
+  Serial.println("Web server started");
 }
