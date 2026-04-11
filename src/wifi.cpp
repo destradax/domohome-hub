@@ -10,8 +10,8 @@ bool connectToWifi(const char* ssid, const char* passPhrase) {
   Serial.print(" ...");
 
   WiFi.mode(WIFI_STA);
-  WiFi.begin(ssid, passPhrase);
   WiFi.setHostname("domohome-hub");
+  WiFi.begin(ssid, passPhrase);
 
   int retries = 0;
   while (WiFi.status() != WL_CONNECTED && retries < MAX_RETRIES) {
@@ -23,6 +23,10 @@ bool connectToWifi(const char* ssid, const char* passPhrase) {
 
   if (WiFi.status() != WL_CONNECTED) {
     Serial.println("Could not connect to WiFi");
+    Serial.print("Current WiFi status: ");
+    Serial.println(WiFi.status());
+    Serial.println("WiFi diagnostic:");
+    WiFi.printDiag(Serial);
     return false;
   }
 
