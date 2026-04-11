@@ -6,15 +6,26 @@
 
 ESP8266WebServer server(80);
 
-/// @brief sends the index.html file
-void handleRoot() {
-  File file = LittleFS.open("/index.html", "r");
-  if (!file) {
-    server.send(500, "text/plain", "Failed to open index.html");
-    return;
+bool handleFileRead(String path) {
+  if (path.endsWith("/")) path += "index.html";
+
+  if (LittleFS.exists(path)) {
+    String contentType = mime::getContentType(path);
+    File file = LittleFS.open(path, "r");
+    server.streamFile(file, contentType);
+    file.close();
+    return true;
   }
-  server.streamFile(file, "text/html");
-  file.close();
+
+  return false;
+}
+
+void handleNotFound() {
+  String uri = ESP8266WebServer::urlDecode(server.uri());
+
+  if (!handleFileRead(uri)) {
+    server.send(404, "text/plain", "FileNotFound");
+  }
 }
 
 /// @brief sends a JSON object with `ipAddress` and `hostname` properties
@@ -31,9 +42,15 @@ void handleWifiStatus() {
 /// @brief Initializes the web server and registers routes
 void initWebServer() {
   LittleFS.begin();
-  server.on("/", HTTP_GET, handleRoot);
+
+  // API routes
   server.on("/api/wifi/status", HTTP_GET, handleWifiStatus);
+
+  // FS routes
+  server.onNotFound(handleNotFound);
+
   server.enableCORS(true);
   server.begin();
+
   Serial.println("Web server started");
 }

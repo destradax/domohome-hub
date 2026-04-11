@@ -5,8 +5,10 @@
 
 extern ESP8266WebServer server;
 
-void initWebServer();
-void handleRoot();
+bool handleFileRead(String path);
+void handleNotFound();
 void handleWifiStatus();
+
+void initWebServer();
 
 #endif
