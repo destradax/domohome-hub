@@ -33,6 +33,7 @@ void initWebServer() {
   LittleFS.begin();
   server.on("/", HTTP_GET, handleRoot);
   server.on("/api/wifi/status", HTTP_GET, handleWifiStatus);
+  server.enableCORS(true);
   server.begin();
   Serial.println("Web server started");
 }
