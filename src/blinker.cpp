@@ -8,10 +8,10 @@ void initBlinker() {
   initialized = true;
 }
 
-void blink(unsigned long duration, unsigned long delayMs) {
+void blink(unsigned long durationMs, unsigned long delayMs) {
   if (!initialized) return;
   digitalWrite(LED_BUILTIN, HIGH);
-  delay(duration);
+  delay(durationMs);
   digitalWrite(LED_BUILTIN, LOW);
   delay(delayMs);
 }
