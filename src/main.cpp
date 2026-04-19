@@ -19,14 +19,16 @@ void setup() {
   if (connectToWifi(ssid, passPhrase)) {
     connectedToWifi = true;
     initWebServer();
+    setBlinkerStatus(BLINKER_STATUS_IDLE);
+  } else {
+    setBlinkerStatus(BLINKER_STATUS_ERROR);
   }
 }
 
 void loop() {
+  blinkerLoop();
+
   if (connectedToWifi) {
     server.handleClient();
-    blinkIdle();
-  } else {
-    blink(100, 100);
   }
 }

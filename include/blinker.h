@@ -3,17 +3,19 @@
 
 #include <Arduino.h>
 
-/// @brief Initializes the built-in led
+enum BlinkerStatus {
+  BLINKER_STATUS_OFF,
+  BLINKER_STATUS_IDLE,
+  BLINKER_STATUS_ERROR
+};
+
+struct Stage {
+  int ledStatus;
+  unsigned long durationMs;
+};
+
 void initBlinker();
-
-/// @brief Turns on the built-in led for `duration` milliseconds, then turns it
-/// off and waits `delay` milliseconds
-/// @param duration
-/// @param delay
-void blink(unsigned long duration, unsigned long delay);
-
-
-/// @brief Turns on the built-in led for 1 second, then turns it off and waits another second
-void blinkIdle();
+void setBlinkerStatus(BlinkerStatus status);
+void blinkerLoop();
 
 #endif
